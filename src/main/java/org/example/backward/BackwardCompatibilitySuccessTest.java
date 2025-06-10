@@ -87,7 +87,7 @@ public class BackwardCompatibilitySuccessTest {
         allSchemas = admin.schemas().getAllSchemas(topic);
         log.info("After send v2 All schemas: {}", allSchemas);
 
-        // 5. Consume messages with V1 schema (should be able failed)
+        // 5. Consume messages with V2 schema (should be able success)
         Consumer<MyRecordV2> consumer = client.newConsumer(schemaV2)
                 .topic(topic)
                 .subscriptionName(subName)
