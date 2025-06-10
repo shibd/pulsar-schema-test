@@ -19,9 +19,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class BackwardCompatibilitySuccessTest {
+public class BackwardCompatibilityPassedTest {
 
-    private static final Logger log = LoggerFactory.getLogger(BackwardCompatibilitySuccessTest.class);
+    private static final Logger log = LoggerFactory.getLogger(BackwardCompatibilityPassedTest.class);
     private static final String SERVICE_URL = "pulsar://localhost:6650";
     private static final String ADMIN_URL = "http://localhost:8080";
     private static final String TENANT = "public";

@@ -19,9 +19,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class BackwardCompatibilityFailedTest {
+public class BackwardCompatibilityUseCaseBTestFailed {
 
-    private static final Logger log = LoggerFactory.getLogger(BackwardCompatibilityFailedTest.class);
+    private static final Logger log = LoggerFactory.getLogger(BackwardCompatibilityUseCaseBTestFailed.class);
     private static final String SERVICE_URL = "pulsar://localhost:6650";
     private static final String ADMIN_URL = "http://localhost:8080";
     private static final String TENANT = "public";
@@ -30,15 +30,32 @@ public class BackwardCompatibilityFailedTest {
     
     @Data
     static class MyRecordV1 {
-        private String field1;
-        private String field2;
+        @Nullable
+        private String id;
+        @Nullable
+        private String name;
+        // ignore Status
+        private long timestamp;
+        @Nullable
+        private String tags;
+        // don't allow null for tags2
+//        @Nullable
+        private String tags2;
     }
 
     @Data
     static class MyRecordV2 {
-        private String field1;
         @Nullable
-        private String field3;
+        private String id;
+        @Nullable
+        private String name;
+        // ignore Status
+        private long timestamp;
+        @Nullable
+        private String tags;
+        // Remove tags2 from V1 and add description
+        @Nullable
+        private String description;
     }
 
     public static void main(String[] args) throws Exception {
@@ -68,8 +85,11 @@ public class BackwardCompatibilityFailedTest {
                 .topic(topic)
                 .create();
         MyRecordV1 recordV1 = new MyRecordV1();
-        recordV1.setField1("V1-Field1");
-        recordV1.setField2("V1-Field2");
+        recordV1.setId("v1-id");
+        recordV1.setName("v1-name");
+        recordV1.setTimestamp(System.currentTimeMillis());
+        recordV1.setTags("v1-tags");
+        recordV1.setTags2("v1-tags2");
         producerV1.send(recordV1);
         log.info("Send V1 schema message: {}", recordV1);
         List<SchemaInfo> allSchemas = admin.schemas().getAllSchemas(topic);
@@ -80,8 +100,11 @@ public class BackwardCompatibilityFailedTest {
                 .topic(topic)
                 .create();
         MyRecordV2 recordV2 = new MyRecordV2();
-        recordV2.setField1("V2-Field1");
-        recordV2.setField3("V2-new-field");
+        recordV2.setId("v2-id");
+        recordV2.setName("v2-name");
+        recordV2.setTimestamp(System.currentTimeMillis());
+        recordV2.setTags("v2-tags");
+        recordV2.setDescription("v2-tags2");
         producerV2.send(recordV2);
         log.info("Send V2 schema message: {}", recordV2);
         allSchemas = admin.schemas().getAllSchemas(topic);
